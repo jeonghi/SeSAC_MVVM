@@ -16,12 +16,32 @@ class ViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    viewModel.outputResult.bind {
+      print("outputResult 변경됨")
+      self.resultLabel.text = self.viewModel.outputResult.text
+    }
+//    
+//    var a = Observable("3")
+//    var b = Observable("2")
+    
+//    a.closure = {
+//      print(a.text + b.text)
+//    }
+    
+//    a.bind {
+//      print(a.text + b.text)
+//    }
+    
+//    a.text = "7"
+//    a.text = "5"
+    
     numberTextField.addTarget(self, action: #selector(numberTextFieldChanged), for: .editingChanged)
   }
   
   @objc func numberTextFieldChanged() {
-    viewModel.text = numberTextField.text
-    resultLabel.text = viewModel.text
+    viewModel.inputText = numberTextField.text
+//    resultLabel.text = viewModel.outputResult.text
   }
 }
 

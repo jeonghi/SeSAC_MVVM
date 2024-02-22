@@ -9,22 +9,17 @@ import Foundation
 
 class NumberViewModel {
   
-  var text: String? {
+  var inputText: String? = "" {
     didSet {
-      text = validation(for: text)
+      validation()
     }
   }
-  
-  func bind(_ closure: @escaping () -> Void){
-    self.closure = closure
-  }
-  
-  var closure: (() -> Void)?
+  var outputResult = Observable("")
   
   // 데이터를 가공하는 과정은 숨기자.!
-  private func validation(for text: String?) -> String {
+  private func validation() {
     
-    return { text in
+    outputResult.text = { text in
       // 1. 문자
       guard let text, !text.isEmpty else {
         return "값을 입력해주세요"
@@ -44,7 +39,7 @@ class NumberViewModel {
       format.numberStyle = .decimal
       let result = format.string(for: num)
       return result ?? ""
-    }(text)
+    }(inputText)
     
   }
 }
