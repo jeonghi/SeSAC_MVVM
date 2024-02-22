@@ -17,9 +17,9 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    viewModel.outputResult.bind {
-      print("outputResult 변경됨")
-      self.resultLabel.text = self.viewModel.outputResult.text
+    viewModel.bindOutputResult { value in
+//      self.resultLabel.text = self.viewModel.outputResult.text
+      self.resultLabel.text = value
     }
 //    
 //    var a = Observable("3")
@@ -40,7 +40,7 @@ class ViewController: UIViewController {
   }
   
   @objc func numberTextFieldChanged() {
-    viewModel.inputText = numberTextField.text
+    viewModel.inputText = numberTextField.text!
 //    resultLabel.text = viewModel.outputResult.text
   }
 }

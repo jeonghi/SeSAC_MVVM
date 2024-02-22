@@ -9,19 +9,18 @@ import Foundation
 
 class NumberViewModel {
   
-  var inputText: String? = "" {
-    didSet {
-      validation()
-    }
+  @Observable var inputText: String = ""
+  @Observable var outputResult: String = ""
+  
+  init() {
+    _inputText.bind { self.validation($0) }
   }
-  var outputResult = Observable("")
   
   // 데이터를 가공하는 과정은 숨기자.!
-  private func validation() {
-    
-    outputResult.text = { text in
+  private func validation(_ text: String) {
+    outputResult = { text in
       // 1. 문자
-      guard let text, !text.isEmpty else {
+      guard text.isEmpty else {
         return "값을 입력해주세요"
       }
       
@@ -39,7 +38,14 @@ class NumberViewModel {
       format.numberStyle = .decimal
       let result = format.string(for: num)
       return result ?? ""
-    }(inputText)
+    }(text)
     
+  }
+  
+  // ⭐️ 프로퍼티 래퍼를 사용할때 Swift가 자동으로 생성하는 `_` 접두사가 붙은 인스턴스 변수는 private 접근 수준을 가짐.
+  // ViewModel 외부에서 직접적으로 인스턴스 변수에 접근할 수가 없기 때문에... 따로 설정할 수 있는 메서드를 뷰 모델에 정의했는데, 이래도 되나 싶음.
+  // 캡슐화를 위해서 프로퍼티 래퍼를 쓰는건데,,,,
+  func bindOutputResult(_ closure: @escaping (String) -> Void) {
+      _outputResult.bind(closure)
   }
 }

@@ -7,27 +7,25 @@
 
 import Foundation
 
-// 실시간으로 달라지는 데이터를 감지
-
-class Observable {
+// ⭐️ class로 할때랑 struct로 할때의 차이가 뭘까?!
+@propertyWrapper
+class Observable<T> {
   
-  // MARK: Internal
-  var text: String {
+  var wrappedValue: T {
     didSet {
-      closure?()
+      _closure?(wrappedValue)
     }
   }
   
-  init(_ text: String) {
-    self.text = text
+  private var _closure: ((T) -> Void)?
+  
+  init(wrappedValue: T) {
+    self.wrappedValue = wrappedValue
   }
   
-  func bind(_ closure: @escaping () -> Void){
-    closure() // ⭐️ bind 즉시 클로져를 실행할 수 있음.
-    // 🤷🏻‍♂️ 왜 즉시 실행시켜야하는거지 ⁉️
-    self.closure = closure
+  func bind(_ closure: ((T) -> Void)?) {
+    closure?(wrappedValue)
+    _closure = closure
   }
-  
-  // MARK: Private
-  private var closure: (() -> Void)?
 }
+
